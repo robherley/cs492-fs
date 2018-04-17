@@ -4,11 +4,11 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <map>
 
 using namespace std;
 
@@ -17,10 +17,14 @@ class Node {
   int _size;
   int _timestamp;
   bool _folder;
-  map<string,Node> _children;
+  map<string, Node> _children;
 
 public:
   Node(string, int, int, bool);
 };
+
+// Setup
+tuple<string, string, int, int> parse_args(int argc, char *const argv[]);
+void print_usage();
 
 #endif

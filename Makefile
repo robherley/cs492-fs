@@ -33,3 +33,6 @@ fclean: clean
 	-$(RM) $(NAME)
 
 re: fclean all
+
+test: all
+	./fs -f file_list.txt -d dir_list.txt -s 512 -b 2
