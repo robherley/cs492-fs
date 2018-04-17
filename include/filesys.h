@@ -4,11 +4,11 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <map>
 
 using namespace std;
 
@@ -18,7 +18,7 @@ public:
   int _size;
   time_t _timestamp;
   bool _folder;
-  map<string,Node> _children;
+  map<string, Node> _children;
 
   Node(string, int, time_t, bool);
   bool add_child(string, int, time_t, bool);
@@ -49,5 +49,9 @@ struct FileBlock {
   void* _start;
   // We dont need next because we can use iterator
 }
+
+// Setup
+tuple<string, string, int, int> parse_args(int argc, char *const argv[]);
+void print_usage();
 
 #endif
