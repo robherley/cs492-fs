@@ -12,43 +12,46 @@
 
 using namespace std;
 
+/**
+ * Nodes are folders, they have children of other folders or have files.
+ */
 class Node {
 public:
-  string _name;
-  int _size;
-  time_t _timestamp;
-  bool _folder;
-  map<string, Node> _children;
+  string name;
+  int size;
+  time_t timestamp;
+  map<string, Node> children;
+  // map<string, File> files;
 
-  Node(string, int, time_t, bool);
-  bool add_child(string, int, time_t, bool);
+  Node(string, int, time_t);
+  bool add_child(string, int, time_t);
 };
 
 class LDisk {
-  public:
-  int _b_size;
-  int _max_size;
+public:
+  int b_size;
+  int max_size;
 
   // vector iterator that represents used blocks in the disk
-  vector<bool> _blocks;
+  vector<bool> blocks;
   LDisk(int, int);
   void set_avail(int, bool);
 };
 
-class LFile {
-  public:
-  // vector or linked link storing the disk blocks that make up a file
-  vector<struct FileBlock> _blocks;
-
-  LFile();
-  void add_fb(int, void*);
+struct FileBlock {
+  int b_size;
+  void *start;
+  // We dont need next because we can use iterator
 };
 
-struct FileBlock {
-  int _b_size;
-  void* _start;
-  // We dont need next because we can use iterator
-}
+class LFile {
+public:
+  // vector or linked link storing the disk blocks that make up a file
+  vector<FileBlock> blocks;
+
+  LFile();
+  void add_fb(int, void *);
+};
 
 // Setup
 tuple<string, string, int, int> parse_args(int argc, char *const argv[]);

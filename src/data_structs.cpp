@@ -2,58 +2,54 @@
 
 /**
  * ----------------------------------------------------------
- *                      NODE 
+ *                      NODE
  * ----------------------------------------------------------
  */
 
-Node :: Node(string name, int size, time_t ts, bool folder) {
-   _name = name; 
-   _size = size;
-   _timestamp = ts;
-   _folder = folder;
-   map<string, Node> children;
-   _children = children;
+Node ::Node(string n_name, int n_size, time_t n_timestamp) {
+  name = n_name;
+  size = n_size;
+  timestamp = n_timestamp;
+  map<string, Node> n_children;
+  children = n_children;
 }
 
-bool Node :: add_child(string name, int size, time_t ts, bool folder) {
-    Node new_node(name, size, ts, folder);
-    pair<string, Node>new_pair(name,new_node);
-    _children.insert(new_pair);
-    return true;
+bool Node ::add_child(string n_name, int n_size, time_t n_timestamp) {
+  Node new_node(n_name, n_size, n_timestamp);
+  pair<string, Node> new_pair(name, new_node);
+  children.insert(new_pair);
+  return true;
 }
 
 /**
  * ----------------------------------------------------------
- *                     LDISK 
+ *                     LDISK
  * ----------------------------------------------------------
  */
 
-LDisk :: LDisk(int block_size, int max_size) {
-    _b_size = block_size;
-    _max_size = max_size;
-    vector<bool> blocks;
-    _blocks = blocks;
+LDisk ::LDisk(int n_block_size, int n_max_size) {
+  b_size = n_block_size;
+  max_size = n_max_size;
+  vector<bool> n_blocks;
+  blocks = n_blocks;
 }
 
-void LDisk :: set_avail(int loc, bool availability) {
-        _vector[loc] = availability;
+void LDisk ::set_avail(int loc, bool availability) {
+  blocks[loc] = availability;
 }
 
 /**
  * ----------------------------------------------------------
- *                    LFILE 
+ *                    LFILE
  * ----------------------------------------------------------
  */
-LFile :: LFile() {
-    vector<struct FileBlock> file_linked_list;
-    _blocks = file_linked_list;
+
+LFile ::LFile() {
+  vector<FileBlock> n_blocks;
+  blocks = n_blocks;
 }
 
-
-void LFile :: add_fb(int block_size, void* ptr) {
-    struct FileBlock fb = {
-        .b_size = block_size;
-        ._start = ptr;
-    }
-    _blocks.push_back(fb);
+void LFile ::add_fb(int block_size, void *ptr) {
+  FileBlock fb = {block_size, ptr};
+  blocks.push_back(fb);
 }
