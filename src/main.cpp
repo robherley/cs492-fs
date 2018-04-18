@@ -25,10 +25,10 @@ int main(int argc, char *const argv[]) {
   queue<string> curr_path;
   while (getline(dir_list, line)) {
     curr_path = split(line, '/');
-    add_dir(root, curr_path);
+    add_dir(&root, curr_path);
   }
 
-  cout << root << endl;
+  cout << &root << endl;
 
   if (!file_list.good()) {
     cerr << "File List not found '" << get<0>(args) << "'" << endl;

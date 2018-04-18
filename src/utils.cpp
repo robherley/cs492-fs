@@ -18,7 +18,7 @@ queue<string> split(string to_split, char delim) {
 /**
  * Given a path, traverse the tree and add folders where necessary.
  */
-void add_dir(Node &root, queue<string> path) {
+void add_dir(Node *root, queue<string> path) {
   if (path.front().compare(".")) {
     cerr << "Error: Invalid Directory in dir_list.txt!" << endl;
     exit(1);
@@ -27,7 +27,7 @@ void add_dir(Node &root, queue<string> path) {
   // Remove root directory from path
   path.pop();
 
-  Node *curr = &root;
+  Node *curr = root;
   // Loop over rest of queue, add dirs for each
   while (!path.empty()) {
     if (!curr->has_child(path.front())) {
@@ -35,7 +35,7 @@ void add_dir(Node &root, queue<string> path) {
       curr->add_child(path.front(), 0, 0);
     }
     // Set new curr to the next node
-    curr = &curr->children.at(path.front());
+    curr = curr->children.at(path.front());
     // Pop the used dir
     path.pop();
   }

@@ -29,14 +29,14 @@ public:
   string name;
   int size;
   time_t timestamp;
-  map<string, Node> children;
+  map<string, Node *> children;
   // map<string, File> files;
 
   Node(string, int, time_t);
   void add_child(string, int, time_t);
   bool has_child(string);
-  friend ostream &operator<<(ostream &, Node &);
-  void print_children(ostream &, Node &, int);
+  friend ostream &operator<<(ostream &, Node *);
+  void print_children(ostream &, Node *, int);
 };
 
 class LDisk {
@@ -71,6 +71,6 @@ void print_usage();
 
 // Utils
 queue<string> split(string, char);
-void add_dir(Node &, queue<string>);
+void add_dir(Node *, queue<string>);
 
 #endif
