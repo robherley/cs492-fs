@@ -14,9 +14,10 @@ Node ::Node(string n_name, int n_size, time_t n_timestamp) {
   children = n_children;
 }
 
-bool Node ::add_child(string n_name, int n_size, time_t n_timestamp) {
+bool Node ::add_child(string n_name, int n_size) {
+  time_t n_timestamp = time(NULL);
   Node new_node(n_name, n_size, n_timestamp);
-  pair<string, Node> new_pair(name, new_node);
+  pair<string, Node> new_pair(n_name, new_node);
   children.insert(new_pair);
   return true;
 }

@@ -19,3 +19,20 @@ stack<Node> cd(stack<Node> *path, string dir) {
   }
   return *path;
 }
+
+void ls(stack<Node> *path) {
+  // This func takes in the stack so 
+  // all function args will more consistent
+  map<string, Node>children = path->top().children;
+  for (map<string,Node>::iterator it=children.begin(); it!=children.end(); ++it)
+    cout << "\t" << it->second.name << endl;
+}
+
+void mkdir(stack<Node> *path, string dir_name) {
+  Node curr_dir = path->top();
+  curr_dir.add_child(dir_name, 0);
+}
+
+void create(stack<Node> *path, string file_name) {
+  Node curr_dir = path->top();
+}
