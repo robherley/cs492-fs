@@ -26,7 +26,6 @@ public:
 
   Node(string, int, time_t);
   bool add_child(string, int, time_t);
-  stack<Node> cd(stack<Node> *path, string dir);
 };
 
 class LDisk {
@@ -58,5 +57,8 @@ public:
 // Setup
 tuple<string, string, int, int> parse_args(int argc, char *const argv[]);
 void print_usage();
+
+// Commands
+stack<Node> cd(stack<Node> *path, string dir);
 
 #endif
