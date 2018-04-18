@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 #include <queue>
+#include <stack>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -25,6 +26,7 @@ public:
 
   Node(string, int, time_t);
   bool add_child(string, int, time_t);
+  stack<Node> cd(stack<Node> *path, string dir);
 };
 
 class LDisk {
