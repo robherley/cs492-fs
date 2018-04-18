@@ -34,6 +34,7 @@ public:
 
   Node(string, int, time_t);
   void add_child(string, int, time_t);
+  bool has_child(string);
   friend ostream &operator<<(ostream &, Node &);
   void print_children(ostream &, Node &, int);
 };
@@ -69,6 +70,7 @@ tuple<string, string, int, int> parse_args(int, char *const[]);
 void print_usage();
 
 // Utils
-vector<string> split(string, char);
+queue<string> split(string, char);
+void add_dir(Node &, queue<string>);
 
 #endif

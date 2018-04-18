@@ -20,25 +20,15 @@ int main(int argc, char *const argv[]) {
     return 1;
   }
 
-  Node root = Node("root", get<2>(args), 0); // Not sure what to do with ts yet
+  Node root = Node("root", get<2>(args), 0);
 
-  root.add_child("test", 1337, 1);
-  root.children.at("test").add_child("sub_test", 13, 2);
-  root.add_child("empty_dir", 69, 2);
+  queue<string> curr_path;
+  while (getline(dir_list, line)) {
+    curr_path = split(line, '/');
+    add_dir(root, curr_path);
+  }
 
   cout << root << endl;
-
-  // vector<string> temp;
-  // while (getline(dir_list, line)) {
-  //   temp = split(line, '/');
-  //   for (int i = 0; i < temp.size(); i++) {
-  //     cout << temp[i];
-  //     if (i + 1 != temp.size()) {
-  //       cout << " -> ";
-  //     }
-  //   }
-  //   cout << endl;
-  // }
 
   if (!file_list.good()) {
     cerr << "File List not found '" << get<0>(args) << "'" << endl;

@@ -20,6 +20,10 @@ void Node ::add_child(string n_name, int n_size, time_t n_timestamp) {
   children.insert(new_pair);
 }
 
+bool Node ::has_child(string child_name) {
+  return children.find(child_name) != children.end();
+}
+
 void print_children(ostream &os, Node &node, int level) {
   if (node.children.size() != 0) {
     int counter = 0;
