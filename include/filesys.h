@@ -3,12 +3,21 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN "\x1b[36m"
+#define RES "\x1b[0m"
 
 using namespace std;
 
@@ -24,7 +33,9 @@ public:
   // map<string, File> files;
 
   Node(string, int, time_t);
-  bool add_child(string, int, time_t);
+  void add_child(string, int, time_t);
+  friend ostream &operator<<(ostream &, Node &);
+  void print_children(ostream &, Node &, int);
 };
 
 class LDisk {
@@ -54,7 +65,10 @@ public:
 };
 
 // Setup
-tuple<string, string, int, int> parse_args(int argc, char *const argv[]);
+tuple<string, string, int, int> parse_args(int, char *const[]);
 void print_usage();
+
+// Utils
+vector<string> split(string, char);
 
 #endif

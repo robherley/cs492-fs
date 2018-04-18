@@ -14,11 +14,36 @@ Node ::Node(string n_name, int n_size, time_t n_timestamp) {
   children = n_children;
 }
 
-bool Node ::add_child(string n_name, int n_size, time_t n_timestamp) {
+void Node ::add_child(string n_name, int n_size, time_t n_timestamp) {
   Node new_node(n_name, n_size, n_timestamp);
-  pair<string, Node> new_pair(name, new_node);
+  pair<string, Node> new_pair(n_name, new_node);
   children.insert(new_pair);
-  return true;
+}
+
+void print_children(ostream &os, Node &node, int level) {
+  if (node.children.size() != 0) {
+    int counter = 0;
+    for (auto &child : node.children) {
+      os << setw(level * 4) << setfill(' ') << "";
+      if (counter + 1 == node.children.size())
+        os << "└── ";
+      else
+        os << "├── ";
+      os << BLUE << child.first << GREEN << " [Size: " << child.second.size
+         << ", TS: " << child.second.timestamp << "]" << RES << endl;
+      if (child.second.children.size() != 0)
+        print_children(os, child.second, level + 1);
+      counter++;
+    }
+  }
+}
+
+ostream &operator<<(ostream &os, Node &node) {
+  os << BLUE << node.name << GREEN << " [Size: " << node.size
+     << ", TS: " << node.timestamp << "]" << RES << endl;
+  print_children(os, node, 0);
+  os.flush();
+  return os;
 }
 
 /**
