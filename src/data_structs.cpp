@@ -12,8 +12,14 @@ Node::Node(string n_name, int n_size, time_t n_timestamp) {
   timestamp = n_timestamp;
 }
 
+Node::~Node() {
+  for (auto &child : children) {
+    delete child.second;
+  }
+}
+
 void Node::add_child(string n_name, int n_size, time_t n_timestamp) {
-  auto node = new Node(n_name, n_size, n_timestamp);
+  Node *node = new Node(n_name, n_size, n_timestamp);
   pair<string, Node *> new_pair(n_name, node);
   children.insert(new_pair);
 }

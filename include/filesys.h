@@ -33,6 +33,7 @@ public:
   // map<string, File> files;
 
   Node(string, int, time_t);
+  ~Node();
   void add_child(string, int, time_t);
   bool has_child(string);
   friend ostream &operator<<(ostream &, Node *);
