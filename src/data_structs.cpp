@@ -24,22 +24,20 @@ bool Node::has_child(string child_name) {
 
 void print_children(ostream &os, Node *node, int level) {
   if (node->children.size() != 0) {
-    // unsigned counter = 0;
+    unsigned counter = 0;
     for (auto child : node->children) {
-      // Node curr = *child.second;
-      cout << child.first << endl;
-      cout << (child.second)->name << endl;
-      // os << setw(level * 4) << setfill(' ') << "";
-      // if (counter + 1 == node->children.size())
-      //   os << "└── ";
-      // else
-      //   os << "├── ";
-      // os << &curr;
-      // if (curr.children.size() != 0) {
-      //   cout << curr.children.size() << endl;
-      //   // print_children(os, child.second, level + 1);
-      // }
-      // counter++;
+      Node curr = *child.second;
+      os << setw(level * 4) << setfill(' ') << "";
+      if (counter + 1 == node->children.size())
+        os << "└── ";
+      else
+        os << "├── ";
+      os << &curr;
+      if (curr.children.size() != 0) {
+        cout << curr.children.size() << endl;
+        // print_children(os, child.second, level + 1);
+      }
+      counter++;
     }
   }
 }
