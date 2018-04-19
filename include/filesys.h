@@ -29,7 +29,7 @@ public:
   string name;
   int size;
   time_t timestamp;
-  map<string, Node *> children;
+  map<string, Node *> child_dirs;
   // map<string, File> files;
 
   Node(string, int, time_t);
@@ -51,7 +51,8 @@ public:
   void set_avail(int, bool);
 };
 
-struct FileBlock {
+class FileBlock {
+public:
   int b_size;
   void *start;
   // We dont need next because we can use iterator

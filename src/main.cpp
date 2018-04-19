@@ -20,15 +20,15 @@ int main(int argc, char *const argv[]) {
     return 1;
   }
 
-  Node root = Node("root", get<2>(args), 0);
+  auto root = new Node("root", get<2>(args), 0);
 
   queue<string> curr_path;
   while (getline(dir_list, line)) {
     curr_path = split(line, '/');
-    add_dir(&root, curr_path);
+    add_dir(root, curr_path);
   }
 
-  cout << &root << endl;
+  cout << root << endl;
 
   if (!file_list.good()) {
     cerr << "File List not found '" << get<0>(args) << "'" << endl;

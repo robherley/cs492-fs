@@ -1,3 +1,4 @@
 ./
 ./src
+./src/empty_dir
 ./include

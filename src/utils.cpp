@@ -35,7 +35,7 @@ void add_dir(Node *root, queue<string> path) {
       curr->add_child(path.front(), 0, 0);
     }
     // Set new curr to the next node
-    curr = curr->children.at(path.front());
+    curr = curr->child_dirs.at(path.front());
     // Pop the used dir
     path.pop();
   }

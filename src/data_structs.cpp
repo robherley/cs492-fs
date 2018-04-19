@@ -6,52 +6,68 @@
  * ----------------------------------------------------------
  */
 
+/**
+ * Constructor
+ */
 Node::Node(string n_name, int n_size, time_t n_timestamp) {
   name = n_name;
   size = n_size;
   timestamp = n_timestamp;
 }
 
+/**
+ * Destructor
+ */
 Node::~Node() {
-  for (auto &child : children) {
+  for (auto &child : child_dirs) {
     delete child.second;
   }
 }
 
+/**
+ * Adds a dir child to the node.
+ */
 void Node::add_child(string n_name, int n_size, time_t n_timestamp) {
   Node *node = new Node(n_name, n_size, n_timestamp);
   pair<string, Node *> new_pair(n_name, node);
-  children.insert(new_pair);
+  child_dirs.insert(new_pair);
 }
 
+/**
+ * Simple method to check if a node has a dir within it.
+ */
 bool Node::has_child(string child_name) {
-  return children.find(child_name) != children.end();
+  return child_dirs.find(child_name) != child_dirs.end();
 }
 
-void print_children(ostream &os, Node *node, int level) {
-  if (node->children.size() != 0) {
-    unsigned counter = 0;
-    for (auto child : node->children) {
-      Node curr = *child.second;
-      os << setw(level * 4) << setfill(' ') << "";
-      if (counter + 1 == node->children.size())
-        os << "└── ";
-      else
-        os << "├── ";
-      os << &curr;
-      if (curr.children.size() != 0) {
-        cout << curr.children.size() << endl;
-        // print_children(os, child.second, level + 1);
-      }
-      counter++;
-    }
+/**
+ * Helper to check a node's child_dirs and pretty print them.
+ */
+void print_child_dirs(ostream &os, Node *node, int level) {
+  unsigned counter = 0;
+  for (auto &child : node->child_dirs) {
+    os << setw(level * 4) << setfill(' ') << "";
+    if (counter + 1 == node->child_dirs.size())
+      os << "└── ";
+    else
+      os << "├── ";
+    os << BLUE << (child.second)->name << GREEN
+       << " [Size: " << (child.second)->size
+       << ", TS: " << (child.second)->timestamp << "]" << RES << endl;
+    if ((child.second)->child_dirs.size() != 0)
+      print_child_dirs(os, child.second, level + 1);
+    counter++;
   }
 }
 
+/**
+ * Overload to print node pointers
+ */
 ostream &operator<<(ostream &os, Node *node) {
   os << BLUE << node->name << GREEN << " [Size: " << node->size
      << ", TS: " << node->timestamp << "]" << RES << endl;
-  print_children(os, node, 0);
+  if (node->child_dirs.size() != 0)
+    print_child_dirs(os, node, 0);
   os.flush();
   return os;
 }
