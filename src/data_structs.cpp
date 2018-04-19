@@ -13,8 +13,8 @@ Node::Node(string n_name, int n_size, time_t n_timestamp) {
 }
 
 void Node::add_child(string n_name, int n_size, time_t n_timestamp) {
-  Node new_node(n_name, n_size, n_timestamp);
-  pair<string, Node *> new_pair(n_name, &new_node);
+  auto node = new Node(n_name, n_size, n_timestamp);
+  pair<string, Node *> new_pair(n_name, node);
   children.insert(new_pair);
 }
 
