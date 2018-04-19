@@ -48,12 +48,11 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
   for (auto &child : node->child_dirs) {
     vector<bool> pipes_copy = pipes;
     bool last = counter + 1 == node->child_dirs.size();
-    // pipes.push_back(last);
     for (auto b : pipes)
       os << (b ? "    " : "│   ");
-    if (last) {
+    if (last)
       os << "└── ";
-    } else
+    else
       os << "├── ";
     os << BLUE << (child.second)->name << GREEN
        << " [Size: " << (child.second)->size
