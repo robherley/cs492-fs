@@ -22,11 +22,12 @@ public:
   string name;
   int size;
   time_t timestamp;
-  map<string, Node> children;
-  // map<string, File> files;
+  map<string, Node> dirs;
+  map<string, File> files;
 
-  Node(string, int, time_t);
-  bool add_child(string, int, time_t);
+  Node(string, int);
+  bool add_file(string, int);
+  bool add_dir(string, int);
 };
 
 class LDisk {
@@ -41,17 +42,18 @@ public:
 };
 
 struct FileBlock {
-  int b_size;
+  int size;
   void *start;
   // We dont need next because we can use iterator
 };
 
-class LFile {
+class File {
 public:
   // vector or linked link storing the disk blocks that make up a file
+  string name;
   vector<FileBlock> blocks;
 
-  LFile();
+  File(string);
   void add_fb(int, void *);
 };
 

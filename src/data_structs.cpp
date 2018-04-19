@@ -6,19 +6,25 @@
  * ----------------------------------------------------------
  */
 
-Node ::Node(string n_name, int n_size, time_t n_timestamp) {
+Node ::Node(string n_name, int n_size) {
   name = n_name;
   size = n_size;
-  timestamp = n_timestamp;
+  timestamp = time(NULL);
   map<string, Node> n_children;
   children = n_children;
 }
 
-bool Node ::add_child(string n_name, int n_size) {
-  time_t n_timestamp = time(NULL);
-  Node new_node(n_name, n_size, n_timestamp);
+bool Node ::add_file(string n_name, int n_size) {
+  File new_file(n_name);
+  pair<string, File> new_pair(n_name, new_file);
+  files.insert(new_pair);
+  return true;
+}
+
+bool Node ::add_dir(string n_name, int n_size) {
+  Node new_node(n_name, n_size);
   pair<string, Node> new_pair(n_name, new_node);
-  children.insert(new_pair);
+  dirs.insert(new_pair);
   return true;
 }
 
@@ -45,9 +51,10 @@ void LDisk ::set_avail(int loc, bool availability) {
  * ----------------------------------------------------------
  */
 
-LFile ::LFile() {
+File ::File(string n_name) {
   vector<FileBlock> n_blocks;
   blocks = n_blocks;
+  name = n_name;
 }
 
 void LFile ::add_fb(int block_size, void *ptr) {
