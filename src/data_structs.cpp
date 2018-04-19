@@ -43,19 +43,27 @@ bool Node::has_child(string child_name) {
 /**
  * Helper to check a node's child_dirs and pretty print them.
  */
-void print_child_dirs(ostream &os, Node *node, int level) {
+void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
   unsigned counter = 0;
   for (auto &child : node->child_dirs) {
-    os << setw(level * 4) << setfill(' ') << "";
-    if (counter + 1 == node->child_dirs.size())
+    vector<bool> pipes_copy = pipes;
+    bool last = counter + 1 == node->child_dirs.size();
+    // pipes.push_back(last);
+    for (auto b : pipes)
+      os << (b ? "    " : "│   ");
+    if (last) {
       os << "└── ";
-    else
+    } else
       os << "├── ";
     os << BLUE << (child.second)->name << GREEN
        << " [Size: " << (child.second)->size
-       << ", TS: " << (child.second)->timestamp << "]" << RES << endl;
-    if ((child.second)->child_dirs.size() != 0)
-      print_child_dirs(os, child.second, level + 1);
+       << ", TS: " << (child.second)->timestamp
+       << ", Children: " << (child.second)->child_dirs.size() << "]" << RES
+       << endl;
+    if ((child.second)->child_dirs.size() != 0) {
+      pipes_copy.push_back(last);
+      print_child_dirs(os, child.second, pipes_copy);
+    }
     counter++;
   }
 }
@@ -65,9 +73,12 @@ void print_child_dirs(ostream &os, Node *node, int level) {
  */
 ostream &operator<<(ostream &os, Node *node) {
   os << BLUE << node->name << GREEN << " [Size: " << node->size
-     << ", TS: " << node->timestamp << "]" << RES << endl;
-  if (node->child_dirs.size() != 0)
-    print_child_dirs(os, node, 0);
+     << ", TS: " << node->timestamp << ", Children: " << node->child_dirs.size()
+     << "]" << RES << endl;
+  if (node->child_dirs.size() != 0) {
+    vector<bool> pipes;
+    print_child_dirs(os, node, pipes);
+  }
   os.flush();
   return os;
 }

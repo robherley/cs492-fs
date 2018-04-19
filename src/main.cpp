@@ -7,10 +7,8 @@ int main(int argc, char *const argv[]) {
   cout << "Disk Size: " << get<2>(args) << endl;
   cout << "Block Size: " << get<3>(args) << endl << endl;
 
+  // Used for string stream
   string line;
-
-  // Read our input with file lists
-  ifstream file_list(get<0>(args));
 
   // Read our input with file lists
   ifstream dir_list(get<1>(args));
@@ -30,6 +28,9 @@ int main(int argc, char *const argv[]) {
 
   cout << root << endl;
 
+  // Read our input with file lists
+  ifstream file_list(get<0>(args));
+
   if (!file_list.good()) {
     cerr << "File List not found '" << get<0>(args) << "'" << endl;
     return 1;
@@ -40,5 +41,6 @@ int main(int argc, char *const argv[]) {
   while (getline(file_list, line))
     file_vect.push_back(line);
 
+  delete root;
   return 0;
 }
