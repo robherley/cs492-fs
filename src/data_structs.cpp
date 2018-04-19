@@ -10,8 +10,6 @@ Node::Node(string n_name, int n_size, time_t n_timestamp) {
   name = n_name;
   size = n_size;
   timestamp = n_timestamp;
-  map<string, Node *> n_children;
-  children = n_children;
 }
 
 void Node::add_child(string n_name, int n_size, time_t n_timestamp) {
@@ -20,7 +18,7 @@ void Node::add_child(string n_name, int n_size, time_t n_timestamp) {
   children.insert(new_pair);
 }
 
-bool Nod::has_child(string child_name) {
+bool Node::has_child(string child_name) {
   return children.find(child_name) != children.end();
 }
 
@@ -29,6 +27,7 @@ void print_children(ostream &os, Node *node, int level) {
     // unsigned counter = 0;
     for (auto child : node->children) {
       // Node curr = *child.second;
+      cout << child.first << endl;
       cout << (child.second)->name << endl;
       // os << setw(level * 4) << setfill(' ') << "";
       // if (counter + 1 == node->children.size())
