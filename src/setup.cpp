@@ -43,3 +43,42 @@ tuple<string, string, int, int> parse_args(int argc, char *const argv[]) {
       make_tuple(file_list, dir_list, disk_size, block_size);
   return args;
 }
+
+/**
+ * Given the root pointer and args, construct our file system based on the text
+ * files specified in the arguments.
+ */
+void construct_fs(Node *root, tuple<string, string, int, int> args) {
+  // Read our input with file lists
+  ifstream dir_list(get<1>(args));
+
+  if (!dir_list.good()) {
+    cerr << "File List not found '" << get<1>(args) << "'" << endl;
+    exit(1);
+  }
+
+  // Used for getline
+  string line;
+
+  while (getline(dir_list, line)) {
+    add_dir_from_root(root, split(line, '/'));
+  }
+
+  // Read our input with file lists
+  ifstream file_list(get<0>(args));
+
+  if (!file_list.good()) {
+    cerr << "File List not found '" << get<0>(args) << "'" << endl;
+    exit(1);
+  }
+
+  // Build a vector of each line in the file
+  while (getline(file_list, line)) {
+    vector<string> file_meta;
+    istringstream iss(line);
+    string str;
+    while (iss >> str)
+      file_meta.push_back(str);
+    add_file_from_root(root, split(file_meta[10], '/'), stoi(file_meta[6]));
+  }
+}

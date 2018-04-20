@@ -82,6 +82,7 @@ public:
 // Setup
 tuple<string, string, int, int> parse_args(int, char *const[]);
 void print_usage();
+void construct_fs(Node *, tuple<string, string, int, int>);
 
 // Utils
 queue<string> split(string, char);
