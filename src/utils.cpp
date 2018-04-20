@@ -61,7 +61,6 @@ void add_file_from_root(Node *root, queue<string> path, int size) {
     // Pop the used dir
     path.pop();
   }
-  cout << "Adding file: " << path.front() << " to node: " << curr->name << endl;
   curr->add_file(path.front(), size, 0);
 }
 

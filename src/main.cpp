@@ -2,10 +2,7 @@
 
 int main(int argc, char *const argv[]) {
   auto args = parse_args(argc, argv);
-  cout << "\nFile List: " << get<0>(args) << endl;
-  cout << "Directory List: " << get<1>(args) << endl;
-  cout << "Disk Size: " << get<2>(args) << endl;
-  cout << "Block Size: " << get<3>(args) << endl << endl;
+  int num_blocks = get<2>(args) / get<3>(args);
 
   // Read our input with file lists
   ifstream dir_list(get<1>(args));
@@ -25,8 +22,6 @@ int main(int argc, char *const argv[]) {
     add_dir_from_root(root, split(line, '/'));
   }
 
-  cout << root << endl;
-
   // Read our input with file lists
   ifstream file_list(get<0>(args));
 
@@ -42,32 +37,14 @@ int main(int argc, char *const argv[]) {
     string str;
     while (iss >> str)
       file_meta.push_back(str);
-    /**
-     * Indicies of file vector:
-     * [0] : inode number
-     * [1] : size in 512-byte blocks
-     * [2] : file permissions
-     * [3] : number of hard links
-     * [4] : owner
-     * [5] : group
-     * [6] : size in bytes
-     * [7] : Last Modified Month
-     * [8] : Last Modified Day
-     * [9] : Last Modified Time
-     * [10] : Path from root
-     */
     add_file_from_root(root, split(file_meta[10], '/'), stoi(file_meta[6]));
   }
 
-  cout << '\n' << root << endl;
-
-  cout << "Is root empty? " << (root->is_empty() ? "yes" : "no") << endl;
-  cout << "Is 'b' empty? "
-       << (get_dir_ptr(root, "./a/b")->is_empty() ? "yes" : "no") << endl;
-  cout << "Is 'e' empty? "
-       << (get_dir_ptr(root, "./a/b/c/d/e")->is_empty() ? "yes" : "no") << endl;
-
-  cout << '\n' << get_dir_ptr(root, "./a/b") << endl;
+  cout << RED << "Disk Size: " << RES << get<2>(args) << endl;
+  cout << RED << "Block Size: " << RES << get<3>(args) << endl;
+  cout << RED << "Total Blocks: " << RES << num_blocks << endl;
+  cout << RED << "\nFS Tree: " << RES << endl;
+  cout << root << endl;
 
   delete root;
   return 0;
