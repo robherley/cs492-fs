@@ -43,6 +43,7 @@ bool Node::has_dir(string child_name) {
  * Adds a file child to the node.
  */
 void Node::add_file(string f_name, int f_size, time_t f_timestamp) {
+  time(&f_timestamp);
   File *file = new File(f_name, f_size, f_timestamp);
   pair<string, File *> new_pair(f_name, file);
   files.insert(new_pair);
@@ -68,8 +69,10 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
       os << "└── ";
     else
       os << "├── ";
+    char human_ts[13];
+    strftime(human_ts, 13, "%b %d %R", localtime(&(file.second)->timestamp));
     os << YELLOW << file.first << GREEN << " [Size: " << (file.second)->size
-       << ", TS: " << (file.second)->timestamp << "]" << RES << endl;
+       << ", TS: " << human_ts << "]" << RES << endl;
   }
   if (node->dirs.size() != 0) {
     for (auto &child : node->dirs) {
@@ -81,8 +84,9 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
         os << "└── ";
       else
         os << "├── ";
-      os << BLUE << child.first << GREEN
-         << " [Children: " << (child.second)->dirs.size() << "]" << RES << endl;
+      os << BLUE << child.first << GREEN << " [Children: "
+         << (child.second)->dirs.size() + (child.second)->files.size() << "]"
+         << RES << endl;
       pipes_copy.push_back(last);
       print_child_dirs(os, child.second, pipes_copy);
       counter++;

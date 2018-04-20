@@ -46,7 +46,7 @@ void add_dir_from_root(Node *root, queue<string> path) {
  */
 void add_file_from_root(Node *root, queue<string> path, int size) {
   if (path.front().compare(".")) {
-    cerr << "Error: Invalid Directory in dir_list.txt!" << endl;
+    cerr << "Error: Invalid Directory in file_list.txt!" << endl;
     exit(1);
   }
 
