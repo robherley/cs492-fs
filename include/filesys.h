@@ -39,16 +39,15 @@ public:
 class Node {
 public:
   string name;
-  int size;
-  time_t timestamp;
   map<string, Node *> dirs;
   map<string, File *> files;
 
-  Node(string, int, time_t);
+  Node(string);
   ~Node();
-  void add_dir(string, int, time_t);
+  void add_dir(string);
   bool has_dir(string);
   void add_file(string, int, time_t);
+  bool is_empty();
   friend ostream &operator<<(ostream &, Node *);
   void print_children(ostream &, Node *, int);
 };
@@ -88,5 +87,6 @@ void print_usage();
 queue<string> split(string, char);
 void add_dir_from_root(Node *, queue<string>);
 void add_file_from_root(Node *, queue<string>, int);
+Node *get_dir_ptr(Node *, string);
 
 #endif

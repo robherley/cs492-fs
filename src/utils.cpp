@@ -32,7 +32,7 @@ void add_dir_from_root(Node *root, queue<string> path) {
   while (!path.empty()) {
     if (!curr->has_dir(path.front())) {
       // If the folder does not exist, add it.
-      curr->add_dir(path.front(), 0, 0);
+      curr->add_dir(path.front());
     }
     // Set new curr to the next node
     curr = curr->dirs.at(path.front());
@@ -63,4 +63,19 @@ void add_file_from_root(Node *root, queue<string> path, int size) {
   }
   cout << "Adding file: " << path.front() << " to node: " << curr->name << endl;
   curr->add_file(path.front(), size, 0);
+}
+
+/**
+ * Get's the pointer of a directory given the absolute path
+ * Make sure to enter in the right path or it will break
+ */
+Node *get_dir_ptr(Node *root, string path) {
+  queue<string> q_path = split(path, '/');
+  Node *curr = root;
+  q_path.pop();
+  while (!q_path.empty()) {
+    curr = curr->dirs.at(q_path.front());
+    q_path.pop();
+  }
+  return curr;
 }

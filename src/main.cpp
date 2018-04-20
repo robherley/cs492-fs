@@ -16,7 +16,7 @@ int main(int argc, char *const argv[]) {
   }
 
   // Pointer to our root node for our entire file system.
-  auto root = new Node("root", 0, 0);
+  auto root = new Node("root");
 
   // Used for getline
   string line;
@@ -60,6 +60,14 @@ int main(int argc, char *const argv[]) {
   }
 
   cout << '\n' << root << endl;
+
+  cout << "Is root empty? " << (root->is_empty() ? "yes" : "no") << endl;
+  cout << "Is 'b' empty? "
+       << (get_dir_ptr(root, "./a/b")->is_empty() ? "yes" : "no") << endl;
+  cout << "Is 'e' empty? "
+       << (get_dir_ptr(root, "./a/b/c/d/e")->is_empty() ? "yes" : "no") << endl;
+
+  cout << '\n' << get_dir_ptr(root, "./a/b") << endl;
 
   delete root;
   return 0;

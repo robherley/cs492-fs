@@ -9,11 +9,7 @@
 /**
  * Constructor
  */
-Node::Node(string n_name, int n_size, time_t n_timestamp) {
-  name = n_name;
-  size = n_size;
-  timestamp = n_timestamp;
-}
+Node::Node(string n_name) { name = n_name; }
 
 /**
  * Destructor
@@ -30,8 +26,8 @@ Node::~Node() {
 /**
  * Adds a dir child to the node.
  */
-void Node::add_dir(string n_name, int n_size, time_t n_timestamp) {
-  Node *node = new Node(n_name, n_size, n_timestamp);
+void Node::add_dir(string n_name) {
+  Node *node = new Node(n_name);
   pair<string, Node *> new_pair(n_name, node);
   dirs.insert(new_pair);
 }
@@ -53,6 +49,11 @@ void Node::add_file(string f_name, int f_size, time_t f_timestamp) {
 }
 
 /**
+ * Checks if Node has no files or folders
+ */
+bool Node::is_empty() { return !(files.size() + dirs.size()); }
+
+/**
  * Helper to check a node's child_dirs and pretty print them.
  * Like the 'tree' command but better because it has colors and meta-data
  */
@@ -68,7 +69,7 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
     else
       os << "├── ";
     os << YELLOW << file.first << GREEN << " [Size: " << (file.second)->size
-       << ", TS: " << (file.second)->timestamp << RES << endl;
+       << ", TS: " << (file.second)->timestamp << "]" << RES << endl;
   }
   if (node->dirs.size() != 0) {
     for (auto &child : node->dirs) {
@@ -80,9 +81,8 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
         os << "└── ";
       else
         os << "├── ";
-      os << BLUE << child.first << GREEN << " [Size: " << (child.second)->size
-         << ", TS: " << (child.second)->timestamp
-         << ", Children: " << (child.second)->dirs.size() << "]" << RES << endl;
+      os << BLUE << child.first << GREEN
+         << " [Children: " << (child.second)->dirs.size() << "]" << RES << endl;
       pipes_copy.push_back(last);
       print_child_dirs(os, child.second, pipes_copy);
       counter++;
@@ -94,8 +94,7 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
  * Overload to print node pointers
  */
 ostream &operator<<(ostream &os, Node *node) {
-  os << BLUE << node->name << GREEN << " [Size: " << node->size
-     << ", TS: " << node->timestamp << ", Children: " << node->dirs.size()
+  os << BLUE << node->name << GREEN << " [Children: " << node->dirs.size()
      << "]" << RES << endl;
   vector<bool> pipes;
   print_child_dirs(os, node, pipes);
