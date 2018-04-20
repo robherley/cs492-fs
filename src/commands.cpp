@@ -56,6 +56,46 @@ int append(stack<Node> *path, string file_name, int num_bits, int b_size) {
     if (b_size - last_fb_size >= num_bits) {
       last_fb_size += num_bits;
       // TODO: append here. Not really sure what to do yet
+      return last_fb_size;
     }
   }
+}
+
+int remove(stack<Node> *path, string file_name, int num_bits) {
+  Node curr_dir = path->top();
+  File desired_file = curr_dir.files.at(file_name);
+  // Check if this file exists
+  if (!desired_file)
+    cout << "This file doesn't exist in this folder" << endl;
+  else {
+    vector<FileBlock> fbs = desired_file.blocks;
+    int last_fb_size = fbs[fbs.size()].size;
+    // If there's enough space in the last file block
+    if (last_fb_size >= num_bits) {
+      last_fb_size -= num_bits;
+      // TODO: append here. Not really sure what to do yet
+      return last_fb_size;
+    }
+  }
+}
+
+void delete (stack<Node> *path, string name) {
+  Node curr_dir = path->top();
+  File desired_file = curr_dir.files.at(name);
+  File desired_dir = curr_dir.dirs.at(name);
+  // Check if this file exists
+  if (desired_dir || desired_file) {
+    if (desired_file)
+      curr_dir.files.erase(name);
+    else if (desired_dir)
+      curr_dir.dirs.erase(name);
+    curr_dir.timestamp = time(NULL);
+  } else {
+    cout << "No files or directories called '" << name
+         << "'exist in this folder" << endl;
+  }
+}
+
+vector<string> bfs(Node root) {
+
 }
