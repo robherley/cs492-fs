@@ -1,6 +1,4 @@
-  4981781      0 -rw-rw-r--   1 rob      rob             0 Apr 19 19:36 ./file_list.txt
   4981785      4 -rw-rw-r--   1 rob      rob            15 Apr 19 18:46 ./top_level_file.txt
-  4981780      4 -rw-rw-r--   1 rob      rob            37 Apr 19 19:36 ./dir_list.txt
   4981784      4 -rw-rw-r--   1 rob      rob            17 Apr 19 18:45 ./a/b/c/d/d_child.txt
   4981783      4 -rw-rw-r--   1 rob      rob             5 Apr 19 18:45 ./a/b/b_child.txt
   4981782      4 -rw-rw-r--   1 rob      rob            19 Apr 19 18:44 ./xyz/dank_meme.png

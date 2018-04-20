@@ -7,9 +7,6 @@ int main(int argc, char *const argv[]) {
   cout << "Disk Size: " << get<2>(args) << endl;
   cout << "Block Size: " << get<3>(args) << endl << endl;
 
-  // Used for string stream
-  string line;
-
   // Read our input with file lists
   ifstream dir_list(get<1>(args));
 
@@ -18,12 +15,14 @@ int main(int argc, char *const argv[]) {
     return 1;
   }
 
-  auto root = new Node("root", get<2>(args), 0);
+  // Pointer to our root node for our entire file system.
+  auto root = new Node("root", 0, 0);
 
-  queue<string> curr_path;
+  // Used for getline
+  string line;
+
   while (getline(dir_list, line)) {
-    curr_path = split(line, '/');
-    add_dir(root, curr_path);
+    add_dir_from_root(root, split(line, '/'));
   }
 
   cout << root << endl;
@@ -37,9 +36,30 @@ int main(int argc, char *const argv[]) {
   }
 
   // Build a vector of each line in the file
-  vector<string> file_vect;
-  while (getline(file_list, line))
-    file_vect.push_back(line);
+  while (getline(file_list, line)) {
+    vector<string> file_meta;
+    istringstream iss(line);
+    string str;
+    while (iss >> str)
+      file_meta.push_back(str);
+    /**
+     * Indicies of file vector:
+     * [0] : inode number
+     * [1] : size in 512-byte blocks
+     * [2] : file permissions
+     * [3] : number of hard links
+     * [4] : owner
+     * [5] : group
+     * [6] : size in bytes
+     * [7] : Last Modified Month
+     * [8] : Last Modified Day
+     * [9] : Last Modified Time
+     * [10] : Path from root
+     */
+    add_file_from_root(root, split(file_meta[10], '/'), stoi(file_meta[6]));
+  }
+
+  cout << '\n' << root << endl;
 
   delete root;
   return 0;

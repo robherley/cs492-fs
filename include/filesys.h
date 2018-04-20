@@ -22,20 +22,33 @@
 using namespace std;
 
 /**
- * Nodes are folders, they have children of other folders or have files.
+ * Holds meta data about files
+ */
+class File {
+public:
+  string name;
+  int size;
+  time_t timestamp;
+
+  File(string, int, time_t);
+};
+
+/**
+ * Nodes are folders, they have children of other folders and have files.
  */
 class Node {
 public:
   string name;
   int size;
   time_t timestamp;
-  map<string, Node *> child_dirs;
-  // map<string, File> files;
+  map<string, Node *> dirs;
+  map<string, File *> files;
 
   Node(string, int, time_t);
   ~Node();
-  void add_child(string, int, time_t);
-  bool has_child(string);
+  void add_dir(string, int, time_t);
+  bool has_dir(string);
+  void add_file(string, int, time_t);
   friend ostream &operator<<(ostream &, Node *);
   void print_children(ostream &, Node *, int);
 };
@@ -73,6 +86,7 @@ void print_usage();
 
 // Utils
 queue<string> split(string, char);
-void add_dir(Node *, queue<string>);
+void add_dir_from_root(Node *, queue<string>);
+void add_file_from_root(Node *, queue<string>, int);
 
 #endif
