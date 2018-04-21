@@ -78,3 +78,68 @@ Node *get_dir_ptr(Node *root, string path) {
   }
   return curr;
 }
+
+/**
+ * I put so much work into the code below, to only succumb to the complexity of
+ * all the edge cases of the collapseable linked list. May this wall of
+ * commented code be a memorial to my fruitless effort.
+ */
+
+// /**
+//  * Given a node in our LDisk list, find the next available node.
+//  * Or, return the nullptr
+//  */
+// LDisk *find_next_free(LDisk *node) {
+//   LDisk *curr = node;
+//   for (; curr && !(curr->is_free); curr = curr->next)
+//     ;
+//   return curr;
+// }
+
+// void delete_from_addr(LDisk *head, int addr) {}
+
+// /**
+//  * Search over all the nodes, alloc memory when can available.
+//  * Returns the vector of int of blocks that were allocated for that file
+//  */
+// vector<pair<int, int>> alloc(LDisk *head, int blocks_needed) {
+//   vector<pair<int, int>> alloc_blocks;
+//   while (blocks_needed != 0) {
+//     LDisk *curr = find_next_free(head);
+//     if (curr == nullptr) {
+//       cout << "Out of space" << endl;
+//       for (auto &addr : alloc_blocks) {
+//         delete_from_addr(head, addr);
+//       }
+//       return alloc_blocks;
+//     }
+//     // See how many available blocks are in the node (add one bc zero
+//     indexed) int blocks_available = (curr->end - curr->begin) + 1;
+//     // Find how much we will allocated (if we have enough in our current
+//     block) int will_alloc = min(blocks_available, blocks_needed); cout <<
+//     "Blocks available: " << blocks_available << endl; cout << "Blocks needed:
+//     " << blocks_needed << endl; blocks_needed -= will_alloc; cout << "Next
+//     Needed: " << blocks_needed << endl; if (curr->begin == 0) { // Node is at
+//     front (we are only singly linked)
+//       if (will_alloc == blocks_available) { // If our node is the perfect
+//       size
+//         curr->is_free = false;
+//       } else { // If we need to slice our node
+//         // Make a new pointer starting at the allocation block size
+//         LDisk *new_block = new LDisk(will_alloc, curr->end, true,
+//         curr->next);
+//         // Change the beginning node to end our allocation size
+//         curr->end = will_alloc - 1; // Again, minus 1 bc zero indexed
+//         // Show that this memory is now used
+//         curr->is_free = false;
+//         // Set the next node to our newly created leftover block
+//         curr->next = new_block;
+//       }
+//       alloc_blocks.push_back(curr->begin, curr->end);
+//     } else {
+//       // TODO
+//       cout << "Something went wrong" << endl;
+//     }
+//   }
+//   return alloc_blocks;
+// }

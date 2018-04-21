@@ -55,29 +55,17 @@ public:
 
 class LDisk {
 public:
-  int b_size;
-  int max_size;
-
-  // vector iterator that represents used blocks in the disk
+  int block_size;
+  int disk_size;
+  int num_blocks;
   vector<bool> blocks;
-  LDisk(int, int);
-  void set_avail(int, bool);
-};
 
-class FileBlock {
-public:
-  int b_size;
-  void *start;
-  // We dont need next because we can use iterator
+  LDisk(int, int);
+  friend ostream &operator<<(ostream &, LDisk);
 };
 
 class LFile {
 public:
-  // vector or linked link storing the disk blocks that make up a file
-  vector<FileBlock> blocks;
-
-  LFile();
-  void add_fb(int, void *);
 };
 
 // Setup
@@ -90,6 +78,8 @@ queue<string> split(string, char);
 void add_dir_from_root(Node *, queue<string>);
 void add_file_from_root(Node *, queue<string>, int);
 Node *get_dir_ptr(Node *, string);
+LDisk *find_next_free(LDisk *);
+vector<pair<int, int>> alloc(LDisk *, int);
 
 // Cli
 void start_cli(Node *, tuple<string, string, int, int>);

@@ -112,15 +112,38 @@ ostream &operator<<(ostream &os, Node *node) {
  * ----------------------------------------------------------
  */
 
-LDisk::LDisk(int n_block_size, int n_max_size) {
-  b_size = n_block_size;
-  max_size = n_max_size;
-  vector<bool> n_blocks;
-  blocks = n_blocks;
+LDisk::LDisk(int disk, int block) {
+  disk_size = disk;
+  block_size = block;
+  num_blocks = disk / block;
+  // Init the ldisk with false value (to represent empty)
+  blocks.reserve(num_blocks);
+  blocks.resize(num_blocks);
+  fill(blocks.begin(), blocks.end(), false);
 }
 
-void LDisk::set_avail(int loc, bool availability) {
-  blocks[loc] = availability;
+/**
+ * Overload to print of ldisk nodes
+ */
+ostream &operator<<(ostream &os, LDisk disk) {
+  int rel = 0;
+  for (int i = 0; i < disk.num_blocks; i++) {
+    string status = disk.blocks.at(i) ? "In use: " : "Free: ";
+    if (i == disk.num_blocks - 1) {
+      if (rel == i)
+        cout << status << rel << endl;
+      else
+        cout << status << rel << "-" << i << endl;
+    } else if (disk.blocks.at(i) != disk.blocks.at(i + 1)) {
+      if (rel == i)
+        cout << status << rel << endl;
+      else
+        cout << status << rel << "-" << i << endl;
+      rel = i + 1;
+    }
+  }
+  os.flush();
+  return os;
 }
 
 /**
@@ -129,15 +152,7 @@ void LDisk::set_avail(int loc, bool availability) {
  * ----------------------------------------------------------
  */
 
-LFile::LFile() {
-  vector<FileBlock> n_blocks;
-  blocks = n_blocks;
-}
-
-void LFile::add_fb(int block_size, void *ptr) {
-  FileBlock fb = {block_size, ptr};
-  blocks.push_back(fb);
-}
+// LFile::LFile() {}
 
 /**
  * ----------------------------------------------------------
