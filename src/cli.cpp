@@ -215,7 +215,7 @@ void delete_thing(Node *root, stack<Node *> &cwd, queue<string> &tokens,
  */
 void append(Node *root, stack<Node *> &cwd, queue<string> &tokens, LDisk &disk,
             tuple<string, string, int, int> args) {
-  // No input after create
+  // No input after append
   if (tokens.empty()) {
     cout << "append: error: no file specified" << endl;
     return;
@@ -298,8 +298,7 @@ void append(Node *root, stack<Node *> &cwd, queue<string> &tokens, LDisk &disk,
     blocks_to_add++;
   } else {
     // Add the blocks we need
-    blocks_to_add +=
-        ceil((float)(bytes_wanted - overflow) / (float)get<3>(args));
+    blocks_to_add += ceil((float)(bytes_wanted) / (float)get<3>(args));
   }
 
   vector<int> added_blocks = disk.alloc(blocks_to_add);
@@ -315,6 +314,140 @@ void append(Node *root, stack<Node *> &cwd, queue<string> &tokens, LDisk &disk,
 
   // Update timestamp
   time(&wanted_file->timestamp);
+}
+
+/**
+ * Remove a certain number of bytes from a given file
+ */
+void remove_thing(Node *root, stack<Node *> &cwd, queue<string> &tokens,
+                  LDisk &disk, tuple<string, string, int, int> args) {
+  // No input after remove
+  if (tokens.empty()) {
+    cout << "remove: error: no file specified" << endl;
+    return;
+  }
+  queue<string> wanted_path;
+  queue<string> rel_path = split(tokens.front(), '/');
+
+  tokens.pop();
+  if (tokens.empty()) {
+    cout << "remove: error: no bytes specified" << endl;
+    return;
+  }
+  int bytes_to_remove;
+  try {
+    bytes_to_remove = stoi(tokens.front());
+  } catch (...) {
+    cout << "remove: error: invalid value for bytes" << endl;
+    return;
+  }
+
+  if (!rel_path.front().size()) {
+    cout << "remove: error: invalid path specified" << endl;
+    return;
+  }
+  if (rel_path.front() != "root") { // if we have a relative path
+    queue<string> partial_path = split(cwd_to_string(cwd), '/');
+    while (partial_path.size()) { // push all dirs of our cwd
+      wanted_path.push(partial_path.front());
+      partial_path.pop();
+    }
+  }
+  // push all dirs of the path (besides the file)
+  while (rel_path.size() - 1) {
+    wanted_path.push(rel_path.front());
+    rel_path.pop();
+  }
+
+  // Remove root
+  wanted_path.pop();
+
+  Node *curr = root;
+  while (!wanted_path.empty()) {
+    if (!curr->has_dir(wanted_path.front())) {
+      cout << "remove: error: specified file does not exist" << endl;
+      return;
+    }
+    curr = (curr->dirs).at(wanted_path.front());
+    wanted_path.pop();
+  }
+
+  if (!curr->has_file(rel_path.front())) {
+    cout << "remove: error: specified file does not exist" << endl;
+    return;
+  }
+
+  File *wanted_file = curr->files.at(rel_path.front());
+
+  int file_size;
+  if (wanted_file->leftover == 0) {
+    file_size = wanted_file->l_file.size() * get<3>(args);
+  } else if (wanted_file->l_file.size()) {
+    file_size = ((wanted_file->l_file.size() - 1) * get<3>(args)) +
+                wanted_file->leftover;
+  } else {
+    file_size = 0;
+  }
+
+  // If we are trying to remove more than we have
+  if (file_size < bytes_to_remove) {
+    cout << "remove: error: removing more bytes than present in file" << endl;
+    return;
+  }
+
+  // If we remove the entire thing, dealloc everything
+  if (file_size == bytes_to_remove) {
+    for (auto n : wanted_file->l_file)
+      disk.blocks.at(n) = false;
+    wanted_file->l_file.clear();
+    wanted_file->leftover = 0;
+    // Update timestamp
+    time(&wanted_file->timestamp);
+    return;
+  }
+
+  if (bytes_to_remove <= wanted_file->leftover) {
+    // If the amount to remove is less than our overflow in the current block
+    wanted_file->leftover = (wanted_file->leftover - bytes_to_remove);
+    if (bytes_to_remove == wanted_file->leftover) {
+      // If it's equal, delete the end block
+      disk.blocks.at(wanted_file->l_file.back()) = false;
+      wanted_file->l_file.pop_back();
+    }
+    // Update timestamp
+    time(&wanted_file->timestamp);
+    return;
+  } else if ((bytes_to_remove < get<3>(args)) && !wanted_file->leftover) {
+    // We have a perfect block (end) and want to remove from it
+    wanted_file->leftover = get<3>(args) - bytes_to_remove;
+    if (bytes_to_remove == get<3>(args)) {
+      // If it's equal, delete the end block
+      disk.blocks.at(wanted_file->l_file.back()) = false;
+      wanted_file->l_file.pop_back();
+    }
+    // Update timestamp
+    time(&wanted_file->timestamp);
+    return;
+  } else {
+    // We need to remove the overflow and blocks with it.
+    bytes_to_remove += wanted_file->leftover; // add our leftover
+    // Set our new leftover value
+    wanted_file->leftover = bytes_to_remove % get<3>(args);
+    unsigned blocks_to_remove =
+        (bytes_to_remove - wanted_file->leftover) / get<3>(args);
+    if (wanted_file->leftover) {
+      // If we have a leftover, we need an extra block for it
+      blocks_to_remove--;
+    }
+    while (blocks_to_remove) {
+      // Del the last block, free the location in ldisk, and move to the next
+      disk.blocks.at(wanted_file->l_file.back()) = false;
+      wanted_file->l_file.pop_back();
+      blocks_to_remove--;
+    }
+    // Update timestamp
+    time(&wanted_file->timestamp);
+  }
 }
 
 /**
@@ -373,6 +506,10 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     // append
     case 4:
       append(root, cwd, tokens, disk, args);
+      break;
+    // remove
+    case 5:
+      remove_thing(root, cwd, tokens, disk, args);
       break;
     // delete
     case 6:
