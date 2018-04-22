@@ -55,7 +55,7 @@ void cd(stack<Node *> &cwd, queue<string> &tokens) {
 }
 
 /**
- *
+ * Makes a directory node given either the relative path or absolute path
  */
 void mkdir(Node *root, stack<Node *> &cwd, queue<string> &tokens) {
   // No input after mkdir
@@ -109,10 +109,46 @@ void mkdir(Node *root, stack<Node *> &cwd, queue<string> &tokens) {
 }
 
 /**
+ * Makes a file given either the relative path or absolute path
+ */
+void create(Node *root, stack<Node *> &cwd, queue<string> &tokens,
+            LDisk &disk) {
+  // No input after create
+  if (tokens.empty()) {
+    cout << "create: error: no file specified" << endl;
+    return;
+  }
+  queue<string> wanted_path;
+  queue<string> rel_path = split(tokens.front(), '/');
+  if ((tokens.front() == "root") && (tokens.size() == 1)) {
+    cout << "create: error: folder already exists" << endl;
+    return;
+  }
+  if (!rel_path.front().size()) {
+    cout << "mkdir: invalid path specified" << endl;
+    return;
+  }
+  if (rel_path.front() != "root") { // if we have a relative path
+    queue<string> partial_path = split(cwd_to_string(cwd), '/');
+    while (partial_path.size()) { // push all dirs of our cwd
+      wanted_path.push(partial_path.front());
+      partial_path.pop();
+    }
+    while (rel_path.size()) { // push all dirs of the relative path
+      wanted_path.push(rel_path.front());
+      rel_path.pop();
+    }
+  } else {
+    wanted_path = rel_path;
+  }
+  add_file_from_root(root, wanted_path, 0, 0, disk);
+}
+
+/**
  * Little prompt to grab the input. AND IT'S COLORFUL
  */
 string prompt(stack<Node *> cwd) {
-  cout << BLUE << getenv("USER") << YELLOW << " | " << GREEN;
+  cout << '\n' << BLUE << getenv("USER") << YELLOW << " | " << GREEN;
   cout << cwd_to_string(cwd) << endl;
   cout << MAGENTA << "$ " << RES;
   string input;
@@ -157,6 +193,10 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     case 2:
       mkdir(root, cwd, tokens);
       break;
+    // create
+    case 3:
+      create(root, cwd, tokens, disk);
+      break;
     // Exit
     case 7:
       running = false;
@@ -166,6 +206,7 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     case 8:
       cout << cwd.top() << endl;
       break;
+    // prdisk
     case 10:
       cout << disk << endl;
       break;

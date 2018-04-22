@@ -11,16 +11,6 @@ int main(int argc, char *const argv[]) {
   // Build our inital filesystem from the text files in args.
   construct_fs(root, args, disk);
 
-  // Cool Pretty Printing For Disk Allocations
-  cout << endl;
-  for (int i = 0; i < disk.blocks.size(); i++) {
-    cout << (disk.blocks.at(i) ? RED : GREEN) << "◼";
-    if (!((i + 1) % 80))
-      cout << '\n';
-  }
-  cout << RES << endl;
-
-  cout << "\nNumber of blocks: " << disk.blocks.size() << endl;
   cout << disk << endl;
 
   // Start our cli interface;
