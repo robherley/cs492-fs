@@ -283,6 +283,8 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     // prdisk
     case 10:
       cout << disk << endl;
+      cout << "Fragmentation: " << get_fragmentation(root, args) << " bytes"
+           << endl;
       break;
     default:
       cout << "Your token val was " << cmd << endl;

@@ -103,12 +103,10 @@ void print_file_info(Node *node, tuple<string, string, int, int> args) {
         int block = (file.second)->l_file.at(i);
         // Last index
         if (i == (file.second)->l_file.size() - 1)
-          cout << '(' << edge * get<3>(args) << " -> "
-               << (block + 1) * get<3>(args) + (file.second)->leftover << ") ";
+          cout << '(' << edge << " -> " << block << ") ";
         // Block->block is not continuous
         else if (((file.second)->l_file.at(i + 1) - block) != 1) {
-          cout << '(' << edge * get<3>(args) << " -> "
-               << (block + 1) * get<3>(args) << ") ";
+          cout << '(' << edge << " -> " << block << ") ";
           edge = (file.second)->l_file.at(i + 1);
         }
       }
@@ -120,6 +118,22 @@ void print_file_info(Node *node, tuple<string, string, int, int> args) {
   for (auto &dir : node->dirs) {
     print_file_info(dir.second, args);
   }
+}
+
+/**
+ * Given a node, find the sum of all the other node files that have leftover
+ * bytes minus the block size.
+ */
+int get_fragmentation(Node *node, tuple<string, string, int, int> args) {
+  int total_frag = 0;
+  for (auto &file : node->files) {
+    if ((file.second)->leftover)
+      total_frag += (get<3>(args) - (file.second)->leftover);
+  }
+  for (auto &dir : node->dirs) {
+    total_frag += get_fragmentation(dir.second, args);
+  }
+  return total_frag;
 }
 
 /**
