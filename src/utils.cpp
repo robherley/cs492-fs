@@ -86,18 +86,35 @@ Node *get_dir_ptr(Node *root, string path) {
 
 /**
  * Given the root node, prints all the meta data about the files in the system.
- * TODO: MAKE THIS CONTINOUS
  */
 void print_file_info(Node *node, tuple<string, string, int, int> args) {
   for (auto &file : node->files) {
-    cout << YELLOW << left << setw(30) << file.first << RES;
-    for (int i = 0; i < (file.second)->l_file.size(); i++) {
-      if (i == (file.second)->l_file.size() - 1)
-        cout << ((file.second)->l_file.at(i) * get<3>(args)) +
-                    (file.second)->leftover
-             << endl;
-      else
-        cout << (file.second)->l_file.at(i) * get<3>(args) << " -> ";
+    cout << YELLOW << left << setw(25) << file.first << RES;
+    cout << GREEN << right << setw(5)
+         << (((file.second)->l_file.size() * get<3>(args)) +
+             (file.second)->leftover)
+         << "B  " << RES;
+    char human_ts[13];
+    strftime(human_ts, 13, "%b %d %R", localtime(&(file.second)->timestamp));
+    cout << MAGENTA << left << setw(14) << human_ts << RES;
+    if ((file.second)->l_file.size()) {
+      int edge = (file.second)->l_file.at(0);
+      for (int i = 0; i < (file.second)->l_file.size(); i++) {
+        int block = (file.second)->l_file.at(i);
+        // Last index
+        if (i == (file.second)->l_file.size() - 1)
+          cout << '(' << edge * get<3>(args) << " -> "
+               << (block + 1) * get<3>(args) + (file.second)->leftover << ") ";
+        // Block->block is not continuous
+        else if (((file.second)->l_file.at(i + 1) - block) != 1) {
+          cout << '(' << edge * get<3>(args) << " -> "
+               << (block + 1) * get<3>(args) << ") ";
+          edge = (file.second)->l_file.at(i + 1);
+        }
+      }
+      cout << endl;
+    } else {
+      cout << "(No Allocations)" << endl;
     }
   }
   for (auto &dir : node->dirs) {
