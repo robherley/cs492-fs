@@ -24,7 +24,7 @@ int main(int argc, char *const argv[]) {
   cout << disk << endl;
 
   // Start our cli interface;
-  start_cli(root, args);
+  start_cli(root, args, disk);
 
   delete root;
   return 0;

@@ -80,6 +80,6 @@ void add_file_from_root(Node *, queue<string>, int, int, LDisk &);
 Node *get_dir_ptr(Node *, string);
 
 // Cli
-void start_cli(Node *, tuple<string, string, int, int>);
+void start_cli(Node *, tuple<string, string, int, int>, LDisk &);
 
 #endif
