@@ -29,10 +29,11 @@ using namespace std;
 class File {
 public:
   string name;
-  int size;
   time_t timestamp;
+  vector<int> l_file;
+  int leftover; // this will represent the bytes in the last node block
 
-  File(string, int, time_t);
+  File(string, int, time_t, vector<int>);
 };
 
 /**
@@ -48,7 +49,8 @@ public:
   ~Node();
   void add_dir(string);
   bool has_dir(string);
-  void add_file(string, int, time_t);
+  void add_file(string, int, vector<int>);
+  bool has_file(string);
   bool is_empty();
   friend ostream &operator<<(ostream &, Node *);
   void print_children(ostream &, Node *, int);
@@ -66,22 +68,16 @@ public:
   friend ostream &operator<<(ostream &, LDisk);
 };
 
-class LFile {
-public:
-};
-
 // Setup
 tuple<string, string, int, int> parse_args(int, char *const[]);
 void print_usage();
-void construct_fs(Node *, tuple<string, string, int, int>);
+void construct_fs(Node *, tuple<string, string, int, int>, LDisk &);
 
 // Utils
 queue<string> split(string, char);
 void add_dir_from_root(Node *, queue<string>);
-void add_file_from_root(Node *, queue<string>, int);
+void add_file_from_root(Node *, queue<string>, int, int, LDisk &);
 Node *get_dir_ptr(Node *, string);
-LDisk *find_next_free(LDisk *);
-vector<pair<int, int>> alloc(LDisk *, int);
 
 // Cli
 void start_cli(Node *, tuple<string, string, int, int>);

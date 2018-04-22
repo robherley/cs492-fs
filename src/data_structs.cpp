@@ -40,11 +40,19 @@ bool Node::has_dir(string child_name) {
 }
 
 /**
+ * Simple method to check if a node has a dir within it.
+ */
+bool Node::has_file(string child_name) {
+  return files.find(child_name) != files.end();
+}
+
+/**
  * Adds a file child to the node.
  */
-void Node::add_file(string f_name, int f_size, time_t f_timestamp) {
+void Node::add_file(string f_name, int leftover, vector<int> alloc_blocks) {
+  time_t f_timestamp;
   time(&f_timestamp);
-  File *file = new File(f_name, f_size, f_timestamp);
+  File *file = new File(f_name, leftover, f_timestamp, alloc_blocks);
   pair<string, File *> new_pair(f_name, file);
   files.insert(new_pair);
 }
@@ -71,8 +79,9 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
       os << "├── ";
     char human_ts[13];
     strftime(human_ts, 13, "%b %d %R", localtime(&(file.second)->timestamp));
-    os << YELLOW << file.first << GREEN << " [Size: " << (file.second)->size
-       << ", TS: " << human_ts << "]" << RES << endl;
+    os << YELLOW << file.first << GREEN
+       << " [Blocks: " << (file.second)->l_file.size() << ", TS: " << human_ts
+       << "]" << RES << endl;
   }
   if (node->dirs.size() != 0) {
     for (auto &child : node->dirs) {
@@ -127,7 +136,7 @@ LDisk::LDisk(int disk, int block) {
 
 /**
  * Allocated memory in LDisk based on the blocks required. Returns a vector of
- * int representing the blocks that were allocated.
+ * ints representing the blocks that were allocated.
  */
 vector<int> LDisk::alloc(int blocks_wanted) {
   int curr_block = 0;
@@ -179,20 +188,13 @@ ostream &operator<<(ostream &os, LDisk disk) {
 
 /**
  * ----------------------------------------------------------
- *                    LFILE
- * ----------------------------------------------------------
- */
-
-// LFile::LFile() {}
-
-/**
- * ----------------------------------------------------------
  *                      FILE
  * ----------------------------------------------------------
  */
 
-File::File(string f_name, int f_size, time_t f_timestamp) {
+File::File(string f_name, int f_leftover, time_t f_timestamp, vector<int> ab) {
   name = f_name;
-  size = f_size;
+  leftover = f_leftover;
   timestamp = f_timestamp;
+  l_file = ab;
 }

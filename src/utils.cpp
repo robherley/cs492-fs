@@ -17,6 +17,7 @@ queue<string> split(string to_split, char delim) {
 
 /**
  * Given a path, traverse the tree and add folders where necessary.
+ * Don't use this for mkdir because it implicitly adds folders when needed
  */
 void add_dir_from_root(Node *root, queue<string> path) {
   if (path.front().compare(".")) {
@@ -44,7 +45,8 @@ void add_dir_from_root(Node *root, queue<string> path) {
 /**
  * Given a path, traverse the tree and add files.
  */
-void add_file_from_root(Node *root, queue<string> path, int size) {
+void add_file_from_root(Node *root, queue<string> path, int n_blocks,
+                        int leftover, LDisk &ldisk) {
   if (path.front().compare(".")) {
     cerr << "Error: Invalid Directory in file_list.txt!" << endl;
     exit(1);
@@ -61,7 +63,16 @@ void add_file_from_root(Node *root, queue<string> path, int size) {
     // Pop the used dir
     path.pop();
   }
-  curr->add_file(path.front(), size, 0);
+  if (curr->has_file(path.front())) {
+    cout << "Error: the file '" << path.front() << "' already exists!";
+  } else {
+    vector<int> alloc_blocks = ldisk.alloc(n_blocks);
+    if (alloc_blocks.size())
+      curr->add_file(path.front(), leftover, alloc_blocks);
+    else
+      cout << "File " << curr->name << " could not be added. (Out of Space)"
+           << endl;
+  }
 }
 
 /**

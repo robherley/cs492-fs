@@ -8,13 +8,8 @@ int main(int argc, char *const argv[]) {
 
   LDisk disk = LDisk(get<2>(args), get<3>(args));
 
-  // Test Allocations on LDisk
-  auto allocated = disk.alloc(20);
-
-  cout << "\nAllocated Addresses: " << endl;
-  for (auto n : allocated) {
-    cout << n * get<3>(args) << ' ';
-  }
+  // Build our inital filesystem from the text files in args.
+  construct_fs(root, args, disk);
 
   // Cool Pretty Printing For Disk Allocations
   cout << endl;
@@ -27,11 +22,9 @@ int main(int argc, char *const argv[]) {
 
   cout << "\nNumber of blocks: " << disk.blocks.size() << endl;
   cout << disk << endl;
-  // Build our inital filesystem from the text files in args.
-  construct_fs(root, args);
 
   // Start our cli interface;
-  start_cli(root, args);
+  // start_cli(root, args);
 
   delete root;
   return 0;

@@ -48,7 +48,8 @@ tuple<string, string, int, int> parse_args(int argc, char *const argv[]) {
  * Given the root pointer and args, construct our file system based on the text
  * files specified in the arguments.
  */
-void construct_fs(Node *root, tuple<string, string, int, int> args) {
+void construct_fs(Node *root, tuple<string, string, int, int> args,
+                  LDisk &ldisk) {
   // Read our input with file lists
   ifstream dir_list(get<1>(args));
 
@@ -79,6 +80,12 @@ void construct_fs(Node *root, tuple<string, string, int, int> args) {
     string str;
     while (iss >> str)
       file_meta.push_back(str);
-    add_file_from_root(root, split(file_meta[10], '/'), stoi(file_meta[6]));
+    int bn = stoi(file_meta[6]) / get<3>(args);
+    int leftover = stoi(file_meta[6]) % get<3>(args);
+    cout << "Adding File '" << file_meta[10] << "' of size " << file_meta[6]
+         << endl;
+    cout << "Number of blocks needed for file: " << bn << endl;
+    cout << "Left over bytes: " << leftover << endl;
+    add_file_from_root(root, split(file_meta[10], '/'), bn, leftover, ldisk);
   }
 }
