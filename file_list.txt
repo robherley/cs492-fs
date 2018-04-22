@@ -1,5 +1,6 @@
-  8520759      0 -rw-r--r--   1  achen    users           0 Apr 17 15:07 ./file_list.txt
-  9045857      4 -rw-r--r--   1  achen    users         104 Apr 17 14:53 ./src/main.cpp
-  9045858      4 -rw-r--r--   1  achen    users         365 Apr 17 15:06 ./include/filesys.h
-  8520755      4 -rw-r--r--   1  achen    users         688 Apr 17 14:53 ./Makefile
-  8520751      4 -rw-r--r--   1  achen    users         550 Apr 17 15:07 ./dir_list.txt
+  4981785      4 -rw-rw-r--   1 rob      rob             2 Apr 19 18:46 ./smol_boye.txt
+  4981785      4 -rw-rw-r--   1 rob      rob             4 Apr 19 18:46 ./one_block.txt
+  4981785      4 -rw-rw-r--   1 rob      rob            15 Apr 19 18:46 ./top_level_file.txt
+  4981784      4 -rw-rw-r--   1 rob      rob            17 Apr 19 18:45 ./a/b/c/d/d_child.txt
+  4981783      4 -rw-rw-r--   1 rob      rob             5 Apr 19 18:45 ./a/b/b_child.txt
+  4981782      4 -rw-rw-r--   1 rob      rob            19 Apr 19 18:44 ./xyz/dank_meme.png
