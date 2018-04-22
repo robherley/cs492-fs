@@ -120,12 +120,8 @@ void create(Node *root, stack<Node *> &cwd, queue<string> &tokens,
   }
   queue<string> wanted_path;
   queue<string> rel_path = split(tokens.front(), '/');
-  if ((tokens.front() == "root") && (tokens.size() == 1)) {
-    cout << "create: error: folder already exists" << endl;
-    return;
-  }
   if (!rel_path.front().size()) {
-    cout << "mkdir: invalid path specified" << endl;
+    cout << "create: invalid path specified" << endl;
     return;
   }
   if (rel_path.front() != "root") { // if we have a relative path
@@ -142,6 +138,76 @@ void create(Node *root, stack<Node *> &cwd, queue<string> &tokens,
     wanted_path = rel_path;
   }
   add_file_from_root(root, wanted_path, 0, 0, disk);
+}
+
+/**
+ * Deletes a file or folder given an absolute or relative path
+ */
+void delete_thing(Node *root, stack<Node *> &cwd, queue<string> &tokens,
+                  LDisk &disk) {
+  // No input after create
+  if (tokens.empty()) {
+    cout << "delete: error: no file/folder specified" << endl;
+    return;
+  }
+  queue<string> wanted_path;
+  queue<string> rel_path = split(tokens.front(), '/');
+  if ((tokens.front() == "root") && (tokens.size() == 1)) {
+    cout << "delete: error: you can't delete the root bc you don't have root "
+         << "access and you never will. nice try, " << getenv("USER") << endl;
+    return;
+  }
+  if (!rel_path.front().size()) {
+    cout << "delete: invalid path specified" << endl;
+    return;
+  }
+  if (rel_path.front() != "root") { // if we have a relative path
+    queue<string> partial_path = split(cwd_to_string(cwd), '/');
+    while (partial_path.size()) { // push all dirs of our cwd
+      wanted_path.push(partial_path.front());
+      partial_path.pop();
+    }
+    while (rel_path.size()) { // push all dirs of the relative path
+      wanted_path.push(rel_path.front());
+      rel_path.pop();
+    }
+  } else {
+    wanted_path = rel_path;
+  }
+  Node *curr = root;
+  wanted_path.pop(); // remove root
+  while (wanted_path.size() != 1) {
+    // if we can't get down the current folder
+    if (!curr->has_dir(wanted_path.front())) {
+      cout << "delete: invalid path specified" << endl;
+      return;
+    }
+    // Set new curr to the next node
+    curr = curr->dirs.at(wanted_path.front());
+    // Pop the used dir
+    wanted_path.pop();
+  }
+  // At this point, curr is equal to the directory containing the deletion
+
+  // check for files first
+  if (curr->has_file(wanted_path.front())) {
+    auto blocks_to_free = (curr->files).at(wanted_path.front())->l_file;
+    for (auto block : blocks_to_free)
+      disk.blocks.at(block) = false;
+    (curr->files).erase(wanted_path.front());
+    return;
+  }
+
+  // check for folders next
+  if (curr->has_dir(wanted_path.front())) {
+    if ((curr->dirs).at(wanted_path.front())->is_empty()) {
+      (curr->dirs).erase(wanted_path.front());
+    } else {
+      cout << "delete: error: the specified folder is not empty" << endl;
+    }
+    return;
+  }
+  cout << "delete: error: unable to delete specified paramater" << endl;
 }
 
 /**
@@ -196,6 +262,9 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     // create
     case 3:
       create(root, cwd, tokens, disk);
+      break;
+    case 6:
+      delete_thing(root, cwd, tokens, disk);
       break;
     // Exit
     case 7:
