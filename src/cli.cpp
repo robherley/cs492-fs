@@ -69,6 +69,10 @@ void mkdir(Node *root, stack<Node *> &cwd, queue<string> &tokens) {
     cout << "mkdir: error: folder already exists" << endl;
     return;
   }
+  if (!rel_path.front().size()) {
+    cout << "mkdir: invalid path specified" << endl;
+    return;
+  }
   if (rel_path.front() != "root") { // if we have a relative path
     queue<string> partial_path = split(cwd_to_string(cwd), '/');
     while (partial_path.size()) { // push all dirs of our cwd
