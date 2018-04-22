@@ -2,6 +2,7 @@
 #define FILESYS_H
 
 #include <algorithm>
+#include <cmath>
 #include <csignal>
 #include <fstream>
 #include <iomanip>
@@ -11,7 +12,6 @@
 #include <sstream>
 #include <stack>
 #include <string>
-#include <unistd.h>
 #include <vector>
 
 #define RED "\x1b[31m"

@@ -91,8 +91,8 @@ void print_file_info(Node *node, tuple<string, string, int, int> args) {
   for (auto &file : node->files) {
     cout << YELLOW << left << setw(25) << file.first << RES;
     cout << GREEN << right << setw(5)
-         << (((file.second)->l_file.size() * get<3>(args)) +
-             (file.second)->leftover)
+         << (((file.second)->l_file.size() - 1) * get<3>(args)) +
+                (file.second)->leftover
          << "B  " << RES;
     char human_ts[13];
     strftime(human_ts, 13, "%b %d %R", localtime(&(file.second)->timestamp));

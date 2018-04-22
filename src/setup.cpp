@@ -80,7 +80,7 @@ void construct_fs(Node *root, tuple<string, string, int, int> args,
     string str;
     while (iss >> str)
       file_meta.push_back(str);
-    int bn = stoi(file_meta[6]) / get<3>(args);
+    int bn = ceil((float)stoi(file_meta[6]) / (float)get<3>(args));
     int leftover = stoi(file_meta[6]) % get<3>(args);
     cout << "Adding File '" << file_meta[10] << "' of size " << file_meta[6]
          << endl;
