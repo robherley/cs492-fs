@@ -78,10 +78,10 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
       os << "└── ";
     else
       os << "├── ";
-    char human_ts[13];
-    strftime(human_ts, 13, "%b %d %R", localtime(&(file.second)->timestamp));
+    char human_ts[16];
+    strftime(human_ts, 16, "%b %d %T", localtime(&(file.second)->timestamp));
     os << YELLOW << file.first << GREEN
-       << " [Blocks: " << (file.second)->l_file.size() << ", TS: " << human_ts
+       << " [Bs: " << (file.second)->l_file.size() << ", TS: " << human_ts
        << "]" << RES << endl;
     f_counter++;
   }
@@ -109,8 +109,9 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
  * Overload to print node pointers
  */
 ostream &operator<<(ostream &os, Node *node) {
-  os << BLUE << node->name << GREEN << " [Children: " << node->dirs.size()
-     << "]" << RES << endl;
+  os << BLUE << node->name << GREEN
+     << " [Children: " << node->dirs.size() + node->files.size() << "]" << RES
+     << endl;
   vector<bool> pipes;
   print_child_dirs(os, node, pipes);
   os.flush();
