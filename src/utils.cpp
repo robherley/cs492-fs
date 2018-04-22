@@ -17,14 +17,8 @@ queue<string> split(string to_split, char delim) {
 
 /**
  * Given a path, traverse the tree and add folders where necessary.
- * Don't use this for mkdir because it implicitly adds folders when needed
  */
 void add_dir_from_root(Node *root, queue<string> path) {
-  if (path.front().compare(".")) {
-    cerr << "Error: Invalid Directory in dir_list.txt!" << endl;
-    exit(1);
-  }
-
   // Remove root directory from path
   path.pop();
 
@@ -47,11 +41,6 @@ void add_dir_from_root(Node *root, queue<string> path) {
  */
 void add_file_from_root(Node *root, queue<string> path, int n_blocks,
                         int leftover, LDisk &ldisk) {
-  if (path.front().compare(".")) {
-    cerr << "Error: Invalid Directory in file_list.txt!" << endl;
-    exit(1);
-  }
-
   // Remove root directory from path
   path.pop();
 

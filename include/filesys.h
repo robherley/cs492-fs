@@ -11,6 +11,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include <unistd.h>
 #include <vector>
 
 #define RED "\x1b[31m"
