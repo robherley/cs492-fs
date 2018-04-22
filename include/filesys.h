@@ -2,6 +2,7 @@
 #define FILESYS_H
 
 #include <algorithm>
+#include <csignal>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -61,6 +62,7 @@ public:
   vector<bool> blocks;
 
   LDisk(int, int);
+  vector<int> alloc(int);
   friend ostream &operator<<(ostream &, LDisk);
 };
 

@@ -19,13 +19,14 @@ string prompt(stack<Node *> cwd) {
  * Our main program loop. Handles user input based on assignment commands.
  */
 void start_cli(Node *root, tuple<string, string, int, int> args) {
+  signal(SIGINT, SIG_IGN);
   map<string, int> cmds = {{"cd", 0},      {"ls", 1},     {"mkdir", 2},
                            {"create", 3},  {"append", 4}, {"remove", 5},
                            {"delete", 6},  {"exit", 7},   {"dir", 8},
                            {"prfiles", 9}, {"prdisk", 10}};
-  bool running = true;
   stack<Node *> cwd;
   cwd.push(root);
+  bool running = true;
   while (running) {
     // Grab our input, split it into a queue of tokens
     queue<string> tokens = split(prompt(cwd), ' ');

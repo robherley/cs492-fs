@@ -9,9 +9,12 @@ int main(int argc, char *const argv[]) {
   LDisk disk = LDisk(get<2>(args), get<3>(args));
 
   // Test Allocations on LDisk
-  fill(disk.blocks.begin(), disk.blocks.begin() + 4, true);
-  fill(disk.blocks.begin() + 20, disk.blocks.begin() + 40, true);
-  disk.blocks.at(disk.blocks.size() - 1) = true;
+  auto allocated = disk.alloc(20);
+
+  cout << "\nAllocated Addresses: " << endl;
+  for (auto n : allocated) {
+    cout << n * get<3>(args) << ' ';
+  }
 
   // Cool Pretty Printing For Disk Allocations
   cout << endl;

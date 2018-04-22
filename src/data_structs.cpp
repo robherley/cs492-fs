@@ -112,6 +112,9 @@ ostream &operator<<(ostream &os, Node *node) {
  * ----------------------------------------------------------
  */
 
+/**
+ * Constructs a LDisk based on disk size and number of blocks
+ */
 LDisk::LDisk(int disk, int block) {
   disk_size = disk;
   block_size = block;
@@ -120,6 +123,34 @@ LDisk::LDisk(int disk, int block) {
   blocks.reserve(num_blocks);
   blocks.resize(num_blocks);
   fill(blocks.begin(), blocks.end(), false);
+}
+
+/**
+ * Allocated memory in LDisk based on the blocks required. Returns a vector of
+ * int representing the blocks that were allocated.
+ */
+vector<int> LDisk::alloc(int blocks_wanted) {
+  int curr_block = 0;
+  vector<int> reserved_blocks;
+  // Loop until we reserve all the blocks or we run out of blocks
+  while ((curr_block != num_blocks) && (blocks_wanted != 0)) {
+    // If the current block is open
+    if (!blocks.at(curr_block)) {
+      blocks.at(curr_block) = true;
+      reserved_blocks.push_back(curr_block);
+      blocks_wanted--;
+    }
+    curr_block++;
+  }
+  // If we didn't get to reserve all the blocks, and we ran out of memory
+  if (blocks_wanted) {
+    cout << "Out of memory." << endl;
+    // Reset all the blocks we attempted to allocate
+    for (int block : reserved_blocks)
+      blocks.at(block) = false;
+    reserved_blocks.clear();
+  }
+  return reserved_blocks;
 }
 
 /**
