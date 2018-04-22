@@ -68,8 +68,9 @@ bool Node::is_empty() { return !(files.size() + dirs.size()); }
  */
 void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
   unsigned counter = 0;
+  unsigned f_counter = 0;
   for (auto &file : node->files) {
-    bool last = counter + 1 == node->files.size();
+    bool last = f_counter + 1 == node->files.size();
     bool no_dirs = !(node->dirs.size());
     for (auto b : pipes)
       os << (b ? "    " : "│   ");
@@ -82,6 +83,7 @@ void print_child_dirs(ostream &os, Node *node, vector<bool> pipes) {
     os << YELLOW << file.first << GREEN
        << " [Blocks: " << (file.second)->l_file.size() << ", TS: " << human_ts
        << "]" << RES << endl;
+    f_counter++;
   }
   if (node->dirs.size() != 0) {
     for (auto &child : node->dirs) {
@@ -158,6 +160,8 @@ vector<int> LDisk::alloc(int blocks_wanted) {
     for (int block : reserved_blocks)
       blocks.at(block) = false;
     reserved_blocks.clear();
+    // Put in an invalid num to designate we could not allocate
+    reserved_blocks.push_back(-1);
   }
   return reserved_blocks;
 }

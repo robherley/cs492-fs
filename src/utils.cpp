@@ -67,11 +67,16 @@ void add_file_from_root(Node *root, queue<string> path, int n_blocks,
     cout << "Error: the file '" << path.front() << "' already exists!";
   } else {
     vector<int> alloc_blocks = ldisk.alloc(n_blocks);
-    if (alloc_blocks.size())
+    if (alloc_blocks.size()) {
+      if (alloc_blocks.at(0) == -1) {
+        cout << "File " << path.front() << " could not be added. (Out of Space)"
+             << endl;
+      }
       curr->add_file(path.front(), leftover, alloc_blocks);
-    else
-      cout << "File " << curr->name << " could not be added. (Out of Space)"
-           << endl;
+    } else {
+      // We are creating an empty file of size 0
+      curr->add_file(path.front(), leftover, alloc_blocks);
+    }
   }
 }
 
