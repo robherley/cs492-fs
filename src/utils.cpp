@@ -85,6 +85,27 @@ Node *get_dir_ptr(Node *root, string path) {
 }
 
 /**
+ * Given the root node, prints all the meta data about the files in the system.
+ * TODO: MAKE THIS CONTINOUS
+ */
+void print_file_info(Node *node, tuple<string, string, int, int> args) {
+  for (auto &file : node->files) {
+    cout << YELLOW << left << setw(30) << file.first << RES;
+    for (int i = 0; i < (file.second)->l_file.size(); i++) {
+      if (i == (file.second)->l_file.size() - 1)
+        cout << ((file.second)->l_file.at(i) * get<3>(args)) +
+                    (file.second)->leftover
+             << endl;
+      else
+        cout << (file.second)->l_file.at(i) * get<3>(args) << " -> ";
+    }
+  }
+  for (auto &dir : node->dirs) {
+    print_file_info(dir.second, args);
+  }
+}
+
+/**
  * I put so much work into the code below, to only succumb to the complexity of
  * all the edge cases of the collapseable linked list. May this wall of
  * commented code be a memorial to my fruitless effort.

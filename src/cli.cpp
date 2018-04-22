@@ -263,6 +263,7 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     case 3:
       create(root, cwd, tokens, disk);
       break;
+    // delete
     case 6:
       delete_thing(root, cwd, tokens, disk);
       break;
@@ -274,6 +275,10 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     // Dir
     case 8:
       cout << cwd.top() << endl;
+      break;
+    // prfiles
+    case 9:
+      print_file_info(root, args);
       break;
     // prdisk
     case 10:

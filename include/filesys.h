@@ -79,6 +79,7 @@ queue<string> split(string, char);
 void add_dir_from_root(Node *, queue<string>);
 void add_file_from_root(Node *, queue<string>, int, int, LDisk &);
 Node *get_dir_ptr(Node *, string);
+void print_file_info(Node *, tuple<string, string, int, int>);
 
 // Cli
 void start_cli(Node *, tuple<string, string, int, int>, LDisk &);
