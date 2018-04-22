@@ -179,7 +179,7 @@ void delete_thing(Node *root, stack<Node *> &cwd, queue<string> &tokens,
   while (wanted_path.size() != 1) {
     // if we can't get down the current folder
     if (!curr->has_dir(wanted_path.front())) {
-      cout << "delete: invalid path specified" << endl;
+      cout << "delete: error: invalid path specified" << endl;
       return;
     }
     // Set new curr to the next node
@@ -208,6 +208,113 @@ void delete_thing(Node *root, stack<Node *> &cwd, queue<string> &tokens,
     return;
   }
   cout << "delete: error: unable to delete specified paramater" << endl;
+}
+
+/**
+ * Appends bytes to a given a file name
+ */
+void append(Node *root, stack<Node *> &cwd, queue<string> &tokens, LDisk &disk,
+            tuple<string, string, int, int> args) {
+  // No input after create
+  if (tokens.empty()) {
+    cout << "append: error: no file specified" << endl;
+    return;
+  }
+  queue<string> wanted_path;
+  queue<string> rel_path = split(tokens.front(), '/');
+
+  tokens.pop();
+  if (tokens.empty()) {
+    cout << "append: error: no bytes specified" << endl;
+    return;
+  }
+  int bytes_wanted;
+  try {
+    bytes_wanted = stoi(tokens.front());
+  } catch (...) {
+    cout << "append: error: invalid value for bytes" << endl;
+    return;
+  }
+
+  if (!rel_path.front().size()) {
+    cout << "append: error: invalid path specified" << endl;
+    return;
+  }
+  if (rel_path.front() != "root") { // if we have a relative path
+    queue<string> partial_path = split(cwd_to_string(cwd), '/');
+    while (partial_path.size()) { // push all dirs of our cwd
+      wanted_path.push(partial_path.front());
+      partial_path.pop();
+    }
+  }
+  // push all dirs of the path (besides the file)
+  while (rel_path.size() - 1) {
+    wanted_path.push(rel_path.front());
+    rel_path.pop();
+  }
+
+  // Remove root
+  wanted_path.pop();
+
+  Node *curr = root;
+  while (!wanted_path.empty()) {
+    if (!curr->has_dir(wanted_path.front())) {
+      cout << "append: error: specified file does not exist" << endl;
+      return;
+    }
+    curr = (curr->dirs).at(wanted_path.front());
+    wanted_path.pop();
+  }
+
+  if (!curr->has_file(rel_path.front())) {
+    cout << "append: error: specified file does not exist" << endl;
+    return;
+  }
+
+  File *wanted_file = curr->files.at(rel_path.front());
+  int leftover_bac = wanted_file->leftover;
+  int overflow = bytes_wanted % get<3>(args);
+  int blocks_to_add = 0;
+  if (wanted_file->leftover) { // if our file has leftover bytes
+    // Find if have room for it in our last block
+    int total_over = (overflow + wanted_file->leftover);
+    if (total_over < get<3>(args)) {
+      // If it fits in our block size
+      wanted_file->leftover = total_over;
+    } else if (total_over == get<3>(args)) {
+      // If it's a perfect fit
+      wanted_file->leftover = 0;
+    } else {
+      // It's greater than our block size, so we need to add a block
+      blocks_to_add++;
+      wanted_file->leftover = total_over % get<3>(args);
+    }
+  } else {
+    wanted_file->leftover = overflow;
+  }
+
+  if (bytes_wanted < get<3>(args)) {
+    // If the amount of bytes we are trying to add is less than our block size
+    blocks_to_add++;
+  } else {
+    // Add the blocks we need
+    blocks_to_add +=
+        ceil((float)(bytes_wanted - overflow) / (float)get<3>(args));
+  }
+
+  vector<int> added_blocks = disk.alloc(blocks_to_add);
+  if (added_blocks.at(0) == -1) {
+    // Our blocks could not be added (reset the leftover)
+    wanted_file->leftover = leftover_bac;
+    return;
+  }
+
+  // If everything worked out okay, add the blocks to our lfile
+  for (auto ind : added_blocks)
+    wanted_file->l_file.push_back(ind);
+
+  // Update timestamp
+  time(&wanted_file->timestamp);
 }
 
 /**
@@ -262,6 +369,10 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
     // create
     case 3:
       create(root, cwd, tokens, disk);
+      break;
+    // append
+    case 4:
+      append(root, cwd, tokens, disk, args);
       break;
     // delete
     case 6:
