@@ -172,7 +172,7 @@ vector<int> LDisk::alloc(int blocks_wanted) {
  */
 ostream &operator<<(ostream &os, LDisk disk) {
   // Cool Pretty Printing For Disk Allocations
-  for (int i = 0; i < disk.blocks.size(); i++) {
+  for (unsigned i = 0; i < disk.blocks.size(); i++) {
     cout << (disk.blocks.at(i) ? RED : GREEN) << "◼";
     if (!((i + 1) % 80))
       cout << '\n';

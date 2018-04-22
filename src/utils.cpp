@@ -107,7 +107,7 @@ void print_file_info(Node *node, tuple<string, string, int, int> args) {
     cout << MAGENTA << left << setw(17) << human_ts << RES;
     if ((file.second)->l_file.size()) {
       int edge = (file.second)->l_file.at(0);
-      for (int i = 0; i < (file.second)->l_file.size(); i++) {
+      for (unsigned i = 0; i < (file.second)->l_file.size(); i++) {
         int block = (file.second)->l_file.at(i);
         // Last index
         if (i == (file.second)->l_file.size() - 1)

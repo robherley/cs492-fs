@@ -82,10 +82,6 @@ void construct_fs(Node *root, tuple<string, string, int, int> args,
       file_meta.push_back(str);
     int bn = ceil((float)stoi(file_meta[6]) / (float)get<3>(args));
     int leftover = stoi(file_meta[6]) % get<3>(args);
-    cout << "Adding File '" << file_meta[10] << "' of size " << file_meta[6]
-         << endl;
-    cout << "Number of blocks needed for file: " << bn << endl;
-    cout << "Left over bytes: " << leftover << endl;
     add_file_from_root(root, split(file_meta[10], '/'), bn, leftover, ldisk);
   }
 }
