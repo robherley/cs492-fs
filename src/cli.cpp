@@ -522,7 +522,7 @@ void start_cli(Node *root, tuple<string, string, int, int> args, LDisk &disk) {
       break;
     // Dir
     case 8:
-      cout << cwd.top() << endl;
+      cout << root << endl;
       break;
     // prfiles
     case 9:
