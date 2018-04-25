@@ -105,16 +105,28 @@ void print_file_info(Node *node, tuple<string, string, int, int> args) {
     char human_ts[16];
     strftime(human_ts, 16, "%b %d %T", localtime(&(file.second)->timestamp));
     cout << MAGENTA << left << setw(17) << human_ts << RES;
+    cout << "Addr: ";
     if ((file.second)->l_file.size()) {
       int edge = (file.second)->l_file.at(0);
       for (unsigned i = 0; i < (file.second)->l_file.size(); i++) {
         int block = (file.second)->l_file.at(i);
         // Last index
-        if (i == (file.second)->l_file.size() - 1)
-          cout << '(' << edge << " -> " << block << ") ";
+        if (i == (file.second)->l_file.size() - 1) {
+          if (block == edge) {
+            cout << '(' << edge * get<3>(args) << ") ";
+          } else {
+            cout << '(' << edge * get<3>(args) << " -> " << block * get<3>(args)
+                 << ") ";
+          }
+        }
         // Block->block is not continuous
         else if (((file.second)->l_file.at(i + 1) - block) != 1) {
-          cout << '(' << edge << " -> " << block << ") ";
+          if (block == edge) {
+            cout << '(' << edge * get<3>(args) << ") ";
+          } else {
+            cout << '(' << edge * get<3>(args) << " -> " << block * get<3>(args)
+                 << ") ";
+          }
           edge = (file.second)->l_file.at(i + 1);
         }
       }
