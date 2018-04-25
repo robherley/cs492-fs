@@ -113,19 +113,21 @@ void print_file_info(Node *node, tuple<string, string, int, int> args) {
         // Last index
         if (i == (file.second)->l_file.size() - 1) {
           if (block == edge) {
-            cout << '(' << edge * get<3>(args) << ") ";
+            cout << '(' << edge * get<3>(args) << " -> "
+                 << (edge * get<3>(args)) + get<3>(args) << ") ";
           } else {
-            cout << '(' << edge * get<3>(args) << " -> " << block * get<3>(args)
-                 << ") ";
+            cout << '(' << edge * get<3>(args) << " -> "
+                 << (block * get<3>(args)) + get<3>(args) << ") ";
           }
         }
         // Block->block is not continuous
         else if (((file.second)->l_file.at(i + 1) - block) != 1) {
           if (block == edge) {
-            cout << '(' << edge * get<3>(args) << ") ";
+            cout << '(' << edge * get<3>(args) << " -> "
+                 << (edge * get<3>(args)) + get<3>(args) << ") ";
           } else {
-            cout << '(' << edge * get<3>(args) << " -> " << block * get<3>(args)
-                 << ") ";
+            cout << '(' << edge * get<3>(args) << " -> "
+                 << (block * get<3>(args)) + get<3>(args) << ") ";
           }
           edge = (file.second)->l_file.at(i + 1);
         }
